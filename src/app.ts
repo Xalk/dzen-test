@@ -8,8 +8,8 @@ import 'reflect-metadata';
 import { IConfigService } from './config/config.service.interface';
 import { IExceptionFilter } from './errors/exception.filter.interface';
 import { PrismaService } from './database/prisma.service';
-// import { UserController } from './users/users.controller';
-// import { AuthMiddleware } from './common/auth.middleware';
+import { CommentController } from './comments/comments.controller';
+
 
 @injectable()
 export class App {
@@ -19,7 +19,7 @@ export class App {
 
 	constructor(
 		@inject(TYPES.ILogger) private logger: ILogger,
-		// @inject(TYPES.UserController) private userController: UserController,
+		@inject(TYPES.CommentController) private commentController: CommentController,
 		@inject(TYPES.ExeptionFilter) private exceptionFilter: IExceptionFilter,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 		@inject(TYPES.PrismaService) private prismaService: PrismaService,
@@ -30,12 +30,10 @@ export class App {
 
 	useMiddleware(): void {
 		this.app.use(json());
-		// const authMiddleware = new AuthMiddleware(this.configService.get('SECRET'));
-		// this.app.use(authMiddleware.execute.bind(authMiddleware));
 	}
 
 	useRoutes(): void {
-		// this.app.use('/users', this.userController.router);
+		this.app.use('/comments', this.commentController.router);
 	}
 
 	useExceptionFilters(): void {
