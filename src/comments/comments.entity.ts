@@ -1,10 +1,10 @@
-
 export class Comment {
 
 	constructor(
 		private readonly _email: string,
 		private readonly _userName: string,
 		private readonly _text: string,
+		private readonly _parentId?: number
 	) {
 
 	}
@@ -19,6 +19,10 @@ export class Comment {
 
 	get text(): string {
 		return this._text;
+	}
+
+	get parentId(): number | undefined {
+		return this._parentId;
 	}
 
 }

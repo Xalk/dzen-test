@@ -1,4 +1,4 @@
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CommentCreateDto {
 	@IsEmail({}, { message: 'Invalid email address' })
@@ -9,4 +9,8 @@ export class CommentCreateDto {
 
 	@IsString()
 	text: string;
+
+	@IsOptional()
+	@IsNumber()
+	public parentId?: number;
 }

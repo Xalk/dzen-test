@@ -14,8 +14,11 @@ datasource db {
 }
 
 model CommentModel {
-  id  Int @id @default(autoincrement())
-  userName String
-  email String
-  text String
+  id            Int      @id @default(autoincrement())
+  userName      String
+  email         String
+  text          String
+  parentComment CommentModel? @relation("NestedComments", fields: [parentId], references: [id])
+  parentId      Int?
+  nestedComments CommentModel[] @relation("NestedComments")
 }

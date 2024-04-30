@@ -12,8 +12,8 @@ export class CommentService implements ICommentService {
 	}
 
 
-	createComment({ email, text, userName }: CommentCreateDto): Promise<CommentModel | null> {
-		const comment = new Comment(email, userName, text);
+	createComment({ email, text, userName, parentId }: CommentCreateDto): Promise<CommentModel | null> {
+		const comment = new Comment(email, userName, text, parentId);
 		return this.commentRepository.create(comment);
 	}
 

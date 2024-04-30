@@ -11,17 +11,43 @@ export class CommentRepository implements ICommentRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {
 	}
 
-	async create({ userName, email, text }: Comment): Promise<CommentModel> {
+	async create({ userName, email, text, parentId }: Comment): Promise<CommentModel> {
 		return this.prismaService.client.commentModel.create({
 			data: {
 				userName,
 				email,
 				text,
+				parentId,
 			},
 		});
 	}
 
 	async findAll(): Promise<CommentModel[]> {
-		return this.prismaService.client.commentModel.findMany();
+		return this.prismaService.client.commentModel.findMany({
+			where: {
+				parentId: null,
+			},
+			include: {
+				nestedComments: {
+					include: {
+						nestedComments: {
+							include: {
+								nestedComments: {
+									include: {
+										nestedComments: {
+											include: {
+												nestedComments: true,
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		});
 	}
+
+
 }
