@@ -1,7 +1,7 @@
 import { IsEmail, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { AttachmentDto } from '../../attachment/dto/attachment.dto';
-import { Attachment } from '../../attachment/attachment.entity';
+import { SanitizeHTML } from '../../utils/sanitize-html-decorator';
 
 export class CommentCreateDto {
 	@IsEmail({}, { message: 'Invalid email address' })
@@ -11,6 +11,7 @@ export class CommentCreateDto {
 	userName: string;
 
 	@IsString()
+	@SanitizeHTML()
 	text: string;
 
 	@IsOptional()

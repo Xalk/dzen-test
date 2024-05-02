@@ -9,6 +9,9 @@ import { IConfigService } from './config/config.service.interface';
 import { IExceptionFilter } from './errors/exception.filter.interface';
 import { PrismaService } from './database/prisma.service';
 import { CommentController } from './comments/comments.controller';
+import { CommentsGateway } from './comments/comments.gateway';
+import { CommentService } from './comments/comments.service';
+
 
 
 @injectable()
@@ -20,6 +23,8 @@ export class App {
 	constructor(
 		@inject(TYPES.ILogger) private logger: ILogger,
 		@inject(TYPES.CommentController) private commentController: CommentController,
+		@inject(TYPES.CommentService) private commentService: CommentService,
+		@inject(TYPES.CommentsGateway) private commentsGateway: CommentsGateway,
 		@inject(TYPES.ExeptionFilter) private exceptionFilter: IExceptionFilter,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 		@inject(TYPES.PrismaService) private prismaService: PrismaService,
@@ -47,6 +52,7 @@ export class App {
 		this.useExceptionFilters();
 		await this.prismaService.connect();
 		this.server = this.app.listen(this.port);
+		this.commentsGateway.getSocketIOInstance().attach(this.server)
 		this.logger.log(`Server launched at http://localhost:${this.port}`);
 	}
 

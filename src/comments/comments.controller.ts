@@ -1,6 +1,3 @@
-import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
 import { inject, injectable } from 'inversify';
 import { BaseController } from '../common/base.controller';
 import { ICommentController } from './comments.controller.interface';
