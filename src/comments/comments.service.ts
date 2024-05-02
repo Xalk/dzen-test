@@ -5,6 +5,7 @@ import { ICommentRepository } from './comments.repository.interface';
 import { TYPES } from '../types';
 import { inject, injectable } from 'inversify';
 import { Comment } from './comments.entity';
+import { Attachment } from '../attachment/attachment.entity';
 
 @injectable()
 export class CommentService implements ICommentService {
@@ -12,8 +13,9 @@ export class CommentService implements ICommentService {
 	}
 
 
-	createComment({ email, text, userName, parentId }: CommentCreateDto): Promise<CommentModel | null> {
-		const comment = new Comment(email, userName, text, parentId);
+	createComment({ email, text, userName, parentId, attachment }: CommentCreateDto): Promise<CommentModel | null> {
+		const createdAttachment = attachment ? new Attachment(attachment.name, attachment.type, attachment.path, attachment.size) : undefined;
+		const comment = new Comment(email, userName, text, parentId, createdAttachment);
 		return this.commentRepository.create(comment);
 	}
 

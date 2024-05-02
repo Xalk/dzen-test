@@ -3,7 +3,7 @@ import { Server } from 'http';
 import { inject, injectable } from 'inversify';
 import { ILogger } from './logger/logger.interface';
 import { TYPES } from './types';
-import { json } from 'body-parser';
+import { json, urlencoded } from 'body-parser';
 import 'reflect-metadata';
 import { IConfigService } from './config/config.service.interface';
 import { IExceptionFilter } from './errors/exception.filter.interface';
@@ -30,6 +30,7 @@ export class App {
 
 	useMiddleware(): void {
 		this.app.use(json());
+		this.app.use(urlencoded({ extended: true }));
 	}
 
 	useRoutes(): void {

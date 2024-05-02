@@ -1,7 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import { IMiddleware } from './middleware.interface';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
-import { validate } from 'class-validator';
+import { validate, ValidationError } from 'class-validator';
+
+
+interface ValidationErrorMessage {
+	[key: string]: string | ValidationErrorMessage;
+}
 
 export class ValidateMiddleware implements IMiddleware {
 	constructor(private classToValidate: ClassConstructor<object>) {
@@ -19,16 +24,36 @@ export class ValidateMiddleware implements IMiddleware {
 		});
 	}
 
-	private transformErrors(errors: any[]): any {
-		const transformedErrors: any = {};
+	private transformErrors(errors: ValidationError[]): ValidationErrorMessage {
+		const transformedErrors: ValidationErrorMessage = {};
 
 		errors.forEach((error) => {
 			const property = error.property;
 			const constraints = error.constraints;
 
-			transformedErrors[property] = Object.values(constraints)[0];
+			if (property === 'attachment') {
+				error.children?.forEach((childError) => {
+					const childProperty = childError.property;
+					const childConstraints = childError.constraints;
+					const constraintMessage = this.getConstraintMessage(childConstraints);
+
+					if (!transformedErrors[property]) {
+						transformedErrors[property] = {};
+					}
+
+					(transformedErrors[property] as ValidationErrorMessage)[childProperty] = constraintMessage;
+				});
+			} else {
+				const constraintMessage = this.getConstraintMessage(constraints);
+				transformedErrors[property] = constraintMessage;
+			}
 		});
 
 		return transformedErrors;
+	}
+
+	private getConstraintMessage(constraints?: { [key: string]: string }): string {
+		const constraintMessages = Object.values(constraints as any);
+		return constraintMessages.join(', ');
 	}
 }

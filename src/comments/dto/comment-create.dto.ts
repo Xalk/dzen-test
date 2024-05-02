@@ -1,4 +1,7 @@
-import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { AttachmentDto } from '../../attachment/dto/attachment.dto';
+import { Attachment } from '../../attachment/attachment.entity';
 
 export class CommentCreateDto {
 	@IsEmail({}, { message: 'Invalid email address' })
@@ -13,4 +16,9 @@ export class CommentCreateDto {
 	@IsOptional()
 	@IsNumber()
 	public parentId?: number;
+
+	@IsOptional()
+	@ValidateNested()
+	@Type(() => AttachmentDto)
+	public attachment?: AttachmentDto;
 }

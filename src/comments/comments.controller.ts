@@ -1,3 +1,6 @@
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
 import { inject, injectable } from 'inversify';
 import { BaseController } from '../common/base.controller';
 import { ICommentController } from './comments.controller.interface';
@@ -8,6 +11,8 @@ import { ICommentService } from './comments.service.interface';
 import { CommentCreateDto } from './dto/comment-create.dto';
 import { ValidateMiddleware } from '../common/validate.middleware';
 import { HttpError } from '../errors/http-error.class';
+import { UploadMiddleware } from '../common/upload.middleware';
+
 
 @injectable()
 export class CommentController extends BaseController implements ICommentController {
@@ -21,7 +26,7 @@ export class CommentController extends BaseController implements ICommentControl
 				path: '/',
 				method: 'post',
 				func: this.create,
-				middlewares: [new ValidateMiddleware(CommentCreateDto)],
+				middlewares: [new UploadMiddleware(), new ValidateMiddleware(CommentCreateDto)],
 			},
 			{
 				path: '/',
@@ -33,6 +38,7 @@ export class CommentController extends BaseController implements ICommentControl
 	}
 
 	async create({ body }: Request<{}, {}, CommentCreateDto>, res: Response, next: NextFunction): Promise<void> {
+
 		const result = await this.commentService.createComment(body);
 
 		if (!result) {

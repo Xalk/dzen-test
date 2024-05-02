@@ -11,13 +11,26 @@ export class CommentRepository implements ICommentRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {
 	}
 
-	async create({ userName, email, text, parentId }: Comment): Promise<CommentModel> {
+	async create({ userName, email, text, parentId, attachment }: Comment): Promise<CommentModel> {
 		return this.prismaService.client.commentModel.create({
 			data: {
 				userName,
 				email,
 				text,
 				parentId,
+				attachment: attachment
+					? {
+						create: {
+							name: attachment.name,
+							type: attachment.type,
+							path: attachment.path,
+							size: attachment.size,
+						},
+					}
+					: undefined,
+			},
+			include: {
+				attachment: true,
 			},
 		});
 	}
@@ -28,6 +41,7 @@ export class CommentRepository implements ICommentRepository {
 				parentId: null,
 			},
 			include: {
+				attachment: true,
 				nestedComments: {
 					include: {
 						nestedComments: {

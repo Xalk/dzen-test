@@ -21,4 +21,16 @@ model CommentModel {
   parentComment CommentModel? @relation("NestedComments", fields: [parentId], references: [id])
   parentId      Int?
   nestedComments CommentModel[] @relation("NestedComments")
+  createdAt      DateTime     @default(now())
+  attachment     AttachmentModel?
+}
+
+model AttachmentModel {
+  id         Int         @id @default(autoincrement())
+  name       String
+  type       String
+  path       String      @unique
+  size       Int
+  commentId  Int         @unique
+  comment    CommentModel @relation(fields: [commentId], references: [id])
 }
