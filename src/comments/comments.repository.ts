@@ -36,31 +36,7 @@ export class CommentRepository implements ICommentRepository {
 	}
 
 	async findAll(): Promise<CommentModel[]> {
-		return this.prismaService.client.commentModel.findMany({
-			where: {
-				parentId: null,
-			},
-			include: {
-				attachment: true,
-				nestedComments: {
-					include: {
-						nestedComments: {
-							include: {
-								nestedComments: {
-									include: {
-										nestedComments: {
-											include: {
-												nestedComments: true,
-											},
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		});
+		return this.prismaService.client.commentModel.findMany();
 	}
 
 

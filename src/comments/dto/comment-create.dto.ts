@@ -15,7 +15,6 @@ export class CommentCreateDto {
 	text: string;
 
 	@IsOptional()
-	@IsNumber()
 	public parentId?: number;
 
 	@IsOptional()

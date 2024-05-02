@@ -15,12 +15,30 @@ export class CommentService implements ICommentService {
 
 	createComment({ email, text, userName, parentId, attachment }: CommentCreateDto): Promise<CommentModel | null> {
 		const createdAttachment = attachment ? new Attachment(attachment.name, attachment.type, attachment.path, attachment.size) : undefined;
-		const comment = new Comment(email, userName, text, parentId, createdAttachment);
+		const comment = new Comment(email, userName, text, Number(parentId), createdAttachment);
 		return this.commentRepository.create(comment);
 	}
 
-	findAll(): Promise<CommentModel[]> {
-		return this.commentRepository.findAll();
+	async findAll(): Promise<CommentModel[]> {
+
+		const allComments = await this.commentRepository.findAll();
+
+		const commentDictionary: { [key: number]: CommentModel & { nestedComments: CommentModel[] } } = {};
+		const commentsHierarchy: CommentModel[] = [];
+
+		allComments.forEach((comment) => {
+			commentDictionary[comment.id] = { ...comment, nestedComments: [] };
+		});
+
+		allComments.forEach((comment) => {
+			if (comment.parentId === null) {
+				commentsHierarchy.push(commentDictionary[comment.id]);
+			} else if (commentDictionary[comment.parentId]) {
+				commentDictionary[comment.parentId].nestedComments.push(commentDictionary[comment.id]);
+			}
+		});
+
+		return commentsHierarchy;
 	}
 
 }

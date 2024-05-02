@@ -20,13 +20,13 @@ export class CommentController extends BaseController implements ICommentControl
 		super(loggerService);
 		this.bindRoutes([
 			{
-				path: '/',
+				path: '/comments',
 				method: 'post',
 				func: this.create,
 				middlewares: [new UploadMiddleware(), new ValidateMiddleware(CommentCreateDto)],
 			},
 			{
-				path: '/',
+				path: '/comments',
 				method: 'get',
 				func: this.findAll,
 				middlewares: [],

@@ -39,7 +39,7 @@ export class App {
 	}
 
 	useRoutes(): void {
-		this.app.use('/comments', this.commentController.router);
+		this.app.use('/', this.commentController.router);
 	}
 
 	useExceptionFilters(): void {
