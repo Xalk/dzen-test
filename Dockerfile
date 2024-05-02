@@ -1,25 +1,26 @@
-FROM node:14 AS builder
+# Use an official Node.js image as the base image
+FROM node:16-alpine
 
+# Set the working directory in the container
 WORKDIR /usr/src/app
 
+# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-RUN npm install --only=production
+# Install dependencies
+RUN npm install
 
+# Install TypeScript globally
+RUN npm install -g typescript
+
+# Copy the rest of the application code to the working directory
 COPY . .
 
+# Build the TypeScript code
 RUN npm run build
 
-FROM node:14-alpine
-
-WORKDIR /usr/src/app
-
-COPY package*.json ./
-
-RUN npm install --only=production
-
-COPY --from=builder /usr/src/app/dist ./dist
-
+# Expose port 8000 to the outside world
 EXPOSE 8000
 
+# Command to run the application
 CMD ["npm", "start"]
