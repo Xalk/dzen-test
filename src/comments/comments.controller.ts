@@ -9,6 +9,7 @@ import { CommentCreateDto } from './dto/comment-create.dto';
 import { ValidateMiddleware } from '../common/validate.middleware';
 import { HttpError } from '../errors/http-error.class';
 import { UploadMiddleware } from '../common/upload.middleware';
+import { GetAllCommentsOptions } from './comments.repository';
 
 
 @injectable()
@@ -47,7 +48,13 @@ export class CommentController extends BaseController implements ICommentControl
 
 
 	async findAll(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const result = await this.commentService.findAll();
+		const { page = '1', limit = '25', orderBy = 'desc' } = req.query;
+		const options: GetAllCommentsOptions = {
+			page: parseInt(page as string, 10),
+			limit: parseInt(limit as string, 10),
+			orderBy: orderBy as 'asc' | 'desc',
+		};
+		const result = await this.commentService.findAll(options);
 		this.ok(res, result);
 	}
 

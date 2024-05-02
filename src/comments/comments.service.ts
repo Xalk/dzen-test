@@ -6,6 +6,7 @@ import { TYPES } from '../types';
 import { inject, injectable } from 'inversify';
 import { Comment } from './comments.entity';
 import { Attachment } from '../attachment/attachment.entity';
+import { GetAllCommentsOptions } from './comments.repository';
 
 @injectable()
 export class CommentService implements ICommentService {
@@ -19,9 +20,9 @@ export class CommentService implements ICommentService {
 		return this.commentRepository.create(comment);
 	}
 
-	async findAll(): Promise<CommentModel[]> {
+	async findAll(options?: GetAllCommentsOptions): Promise<CommentModel[]> {
 
-		const allComments = await this.commentRepository.findAll();
+		const allComments = await this.commentRepository.findAll(options);
 
 		const commentDictionary: { [key: number]: CommentModel & { nestedComments: CommentModel[] } } = {};
 		const commentsHierarchy: CommentModel[] = [];

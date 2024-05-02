@@ -5,6 +5,11 @@ import { ICommentRepository } from './comments.repository.interface';
 import { CommentModel } from '@prisma/client';
 import { Comment } from './comments.entity';
 
+export interface GetAllCommentsOptions {
+	page?: number;
+	limit?: number;
+	orderBy?: 'asc' | 'desc';
+}
 
 @injectable()
 export class CommentRepository implements ICommentRepository {
@@ -35,8 +40,13 @@ export class CommentRepository implements ICommentRepository {
 		});
 	}
 
-	async findAll(): Promise<CommentModel[]> {
-		return this.prismaService.client.commentModel.findMany();
+	async findAll(options: GetAllCommentsOptions = {}): Promise<CommentModel[]> {
+		const { page = 1, limit = 25, orderBy = 'desc'  } = options;
+		return this.prismaService.client.commentModel.findMany({
+			skip: (page - 1) * limit,
+			take: limit,
+			orderBy: {id: orderBy},
+		});
 	}
 
 
