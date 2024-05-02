@@ -13,6 +13,8 @@ RUN npm install
 # Install TypeScript globally
 RUN npm install -g typescript
 
+RUN npm run generate
+
 # Copy the rest of the application code to the working directory
 COPY . .
 
