@@ -13,6 +13,13 @@ const uploadMulter = multer({ storage });
 
 export class UploadMiddleware implements IMiddleware {
 	execute(req: Request, res: Response, next: NextFunction): void {
+
+		// Check if the uploads directory exists, if not, create it
+		const uploadsDir = path.join(__dirname, '../../', 'uploads');
+		if (!fs.existsSync(uploadsDir)) {
+			fs.mkdirSync(uploadsDir, { recursive: true });
+		}
+
 		const upload = uploadMulter.single('attachment');
 
 		upload(req, res, async (err) => {
@@ -59,6 +66,7 @@ export class UploadMiddleware implements IMiddleware {
 
 				// Write the buffer to the file system
 				fs.writeFileSync(filePath, req.file.buffer);
+
 
 				// Add to req body to validate
 				const attachment = req.file

@@ -23,7 +23,6 @@ export class CommentsGateway {
 			// Handle 'comment' event
 			socket.on('comment', async (comment: CommentCreateDto) => {
 				try {
-					console.log(111);
 					const  validationErrors = await this.validateCommentData(comment);
 					if (validationErrors.length > 0) {
 						socket.emit('commentError', { error: 'Validation failed', details: validationErrors });
