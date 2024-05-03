@@ -1,5 +1,5 @@
 # Use an official Node.js image as the base image
-FROM node:16-alpine
+FROM node:20-alpine
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
@@ -13,7 +13,8 @@ RUN npm install
 # Install TypeScript globally
 RUN npm install -g typescript
 
-RUN npm run generate
+COPY prisma/schema.prisma ./prisma/
+RUN npx prisma generate
 
 # Copy the rest of the application code to the working directory
 COPY . .
