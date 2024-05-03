@@ -13,6 +13,7 @@ RUN npm install
 # Install TypeScript globally
 RUN npm install -g typescript
 
+# Copy the Prisma schema file to the working directory
 COPY prisma/schema.prisma ./prisma/
 RUN npx prisma generate
 
