@@ -14,3 +14,5 @@
 
 To see the uploaded file go here:
 http://localhost:8000/uploads/{fileName}
+
+#### Deploy: https://dzen-test-95fi.onrender.com
