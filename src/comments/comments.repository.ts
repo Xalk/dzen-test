@@ -46,6 +46,9 @@ export class CommentRepository implements ICommentRepository {
 			skip: (page - 1) * limit,
 			take: limit,
 			orderBy: {id: orderBy},
+			include: {
+				attachment: true,
+			}
 		});
 	}
 

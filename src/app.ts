@@ -36,6 +36,7 @@ export class App {
 	useMiddleware(): void {
 		this.app.use(json());
 		this.app.use(urlencoded({ extended: true }));
+		this.app.use("/uploads", express.static("uploads"));
 	}
 
 	useRoutes(): void {

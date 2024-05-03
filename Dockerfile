@@ -13,7 +13,7 @@ RUN npm install
 # Install TypeScript globally
 RUN npm install -g typescript
 
-COPY prisma/schema.prisma ./prisma/
+COPY ./prisma prisma
 
 RUN npx prisma migrate deploy
 
